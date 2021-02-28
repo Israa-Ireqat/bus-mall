@@ -10,7 +10,7 @@ const thirdImg =document.getElementById('thirdImg');
 let firstProductIndex=0;
 let secondProductIndex=0;
 let thirdProductIndex=0;
-const clicksNumber=25;
+const clicksNumber=24;
 
 function Product(name){
     this.name= name;
@@ -48,27 +48,31 @@ function renderNewProduct(){
     Product.all[secondIndex].shown++;
     Product.all[thirdIndex].shown++;
 }
-function theClick (event){
-    if (Product.counter<=clicksNumber){
+function handelClick(event){
+    if (Product.counter <= clicksNumber){
         const clickedProduct= event.target;
         if (clickedProduct.id=='firstImg'|| clickedProduct.id=='secondImg'|| clickedProduct.id=='thirdImg'){
             if (clickedProduct.id=='firstImg'){
-               Product.all[firstIndex].clicks++;
+               Product.all[firstProductIndex].clicks++;
             }
             if(clickedProduct.id=='secondImg'){
-               Product.all[secondIndex].clicks++;
+               Product.all[secondProductIndex].clicks++;
             }
             if (clickedProduct.id=='thirdImg'){
-                Product.all[thirdIndex].clicks++;
+                Product.all[thirdProductIndex].clicks++;
             }
-            product.counter++;
+            Product.counter++;
             renderNewProduct();
         }
     }
 }
-contentSection.addEventListener( 'click', theClick );
+contentSection.addEventListener( 'click', handelClick );
 console.log( Product.all );
+
 function randomNumber( min, max ) {
      return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
     }
     renderNewProduct();
+    
+
+    
