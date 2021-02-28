@@ -10,7 +10,7 @@ const thirdImg =document.getElementById('thirdImg');
 let firstProductIndex=0;
 let secondProductIndex=0;
 let thirdProductIndex=0;
-const clicksNumber=25;
+const clicksNumber=24;
 
 function Product(name){
     this.name= name;
@@ -73,4 +73,6 @@ function randomNumber( min, max ) {
      return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
     }
     renderNewProduct();
+    
 
+    
