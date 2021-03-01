@@ -1,78 +1,101 @@
 'use strict';
 
-let products = ['bag','banana','bathroom','boots','breakfast','bubblegum','chair','cthulhu','dog-duck','dragon','pen','ptt-sweep','scissors','shark','sweep','tauntaun','unicorn','usb','water-can','wine-glass']
+let products = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg']
 
-const contentSection =document.getElementById('contentSection');
-const firstImg =document.getElementById('firstImg');
-const secondImg =document.getElementById('secondImg');
-const thirdImg =document.getElementById('thirdImg');
+const result = document.getElementById('result')
+const contentSection = document.getElementById('contentSection');
+const firstImg = document.getElementById('firstImg');
+const secondImg = document.getElementById('secondImg');
+const thirdImg = document.getElementById('thirdImg');
 
-let firstProductIndex=0;
-let secondProductIndex=0;
-let thirdProductIndex=0;
-const clicksNumber=24;
-
-function Product(name){
-    this.name= name;
-    this.image = `./img/${name}.jpg`;
-    this.click= 0;
-    this.shown= 0;
+let firstProductIndex = 0;
+let secondProductIndex = 0;
+let thirdProductIndex = 0;
+const clicksNumber = 24;
+Product.all = [];
+Product.counter = 0;
+//my product
+function Product(name) {
+    this.name = name.split('.').slice(0, -1).join('.');
+    this.image = `./img/${name}`;
+    this.clicks = 0;
+    this.shown = 0;
     Product.all.push(this);
 }
-Product.all= [];
-Product.counter= 0;
 
-for (let i=0; i< products.length;i++){
-    new Product (products[i]);
+//
+for (let i = 0; i < products.length; i++) {
+    new Product(products[i]);
 }
-function renderNewProduct(){
-    let firstIndex= randomNumber(0,Product.all.length -1);
-    firstImg.src= Product.all[firstIndex].image;
-    firstImg.alt= Product.all[firstIndex].name;
-    firstProductIndex= firstIndex;
+//rendering function:
+function renderNewProduct() {
+    let firstIndex = randomNumber(0, Product.all.length - 1);
+    firstImg.src = Product.all[firstIndex].image;
+    firstImg.alt = Product.all[firstIndex].name;
+    firstProductIndex = firstIndex;
     let secondIndex;
-    do{
-        secondIndex= randomNumber(0,Product.all.length -1);
-    }while (firstIndex===secondIndex);
-    secondImg.src= Product.all[secondIndex].image;
-    secondImg.alt= Product.all[secondIndex].name;
-    secondProductIndex= secondIndex;
+    do {
+        secondIndex = randomNumber(0, Product.all.length - 1);
+    } while (firstIndex === secondIndex);
+    secondImg.src = Product.all[secondIndex].image;
+    secondImg.alt = Product.all[secondIndex].name;
+    secondProductIndex = secondIndex;
     let thirdIndex;
-    do{ thirdIndex= randomNumber(0,Product.all.length-1);
-    }while (firstIndex===thirdIndex || secondIndex===thirdIndex);
-    thirdImg.src= Product.all[thirdIndex].image;
-    thirdImg.alt= Product.all[thirdIndex].name;
-    thirdProductIndex= thirdIndex;
+    do {
+        thirdIndex = randomNumber(0, Product.all.length - 1);
+    } while (firstIndex === thirdIndex || secondIndex === thirdIndex);
+    thirdImg.src = Product.all[thirdIndex].image;
+    thirdImg.alt = Product.all[thirdIndex].name;
+    thirdProductIndex = thirdIndex;
 
     Product.all[firstIndex].shown++;
     Product.all[secondIndex].shown++;
     Product.all[thirdIndex].shown++;
+    //
+
 }
-function handelClick(event){
-    if (Product.counter <= clicksNumber){
-        const clickedProduct= event.target;
-        if (clickedProduct.id=='firstImg'|| clickedProduct.id=='secondImg'|| clickedProduct.id=='thirdImg'){
-            if (clickedProduct.id=='firstImg'){
-               Product.all[firstProductIndex].clicks++;
+//listener
+contentSection.addEventListener('click', handelClick);
+function handelClick(event) {
+    if (Product.counter <= clicksNumber) {
+        const clickedProduct = event.target;
+        if (clickedProduct.id == 'firstImg' || clickedProduct.id == 'secondImg' || clickedProduct.id == 'thirdImg') {
+            if (clickedProduct.id == 'firstImg') {
+                Product.all[firstProductIndex].clicks++;
             }
-            if(clickedProduct.id=='secondImg'){
-               Product.all[secondProductIndex].clicks++;
+            if (clickedProduct.id == 'secondImg') {
+                Product.all[secondProductIndex].clicks++;
             }
-            if (clickedProduct.id=='thirdImg'){
+            if (clickedProduct.id == 'thirdImg') {
                 Product.all[thirdProductIndex].clicks++;
             }
             Product.counter++;
             renderNewProduct();
         }
+        else {
+            contentSection.removeEventListener('click', handelClick);
+            result.style.display = 'block';
+        }
     }
+   
 }
-contentSection.addEventListener( 'click', handelClick );
-console.log( Product.all );
-
-function randomNumber( min, max ) {
-     return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+result.addEventListener('click', handelButtonClick);
+function handelButtonClick() {
+    const resultSection = document.getElementById('resultSection');
+    const ulElement = document.createElement('ul');
+    resultSection.appendChild(ulElement);
+    for (let i = 0; i < Product.all.length; i++) {
+        const liElement = document.createElement('li');
+        ulElement.appendChild(liElement);
+        liElement.textContent = `${Product.all[i].name} had ${Product.all[i].clicks} votes, and was seen ${Product.all[i].shown} times.`;
     }
-    renderNewProduct();
-    
+    result.removeEventListener('click', handelButtonClick);
+}
 
-    
+console.log(Product.all);
+//
+function randomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+renderNewProduct();
+
