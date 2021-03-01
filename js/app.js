@@ -22,6 +22,9 @@ function Product(name) {
     this.shown = 0;
     Product.all.push(this);
 }
+//No repeating Images:
+
+
 
 //
 for (let i = 0; i < products.length; i++) {
@@ -76,8 +79,10 @@ function handelClick(event) {
             contentSection.removeEventListener('click', handelClick);
             result.style.display = 'block';
         }
+    } else {
+        drawChart();
     }
-   
+
 }
 result.addEventListener('click', handelButtonClick);
 function handelButtonClick() {
@@ -98,4 +103,48 @@ function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 renderNewProduct();
+//chart function:
+function drawChart(){
+let ProductArray= [];
+let viewsArray= [];
+let votesArray=[];
+for (let i = 0; i < Product.all.length; i++) {
+    ProductArray.push(Product.all[i].name);
+    viewsArray.push(Product.all[i].shown);
+    votesArray.push(Product.all[i].clicks);
+    
+}
 
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+     labels: ProductArray,
+        datasets: [
+            {
+                label: 'Votes',
+                data: votesArray,
+                backgroundColor: 'yellow',
+                borderColor:'black',
+                borderWidth: 1
+            },
+            {
+                label: 'Times shown',
+                data: viewsArray,
+                backgroundColor: 'pink',
+                borderColor:'black',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}

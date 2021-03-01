@@ -44,10 +44,12 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+    height: fit-content;
   }
 
   #contentsection image{
     width: calc(30%);
+    height: max-content;
   }
 
   
