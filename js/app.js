@@ -28,7 +28,7 @@ for (let i = 0; i < products.length; i++) {
     new Product(products[i]);
 }
 //No repeating Images:
-let noRepeatArray =[];
+let noRepeatArray = [];
 
 //rendering function:
 function renderNewProduct() {
@@ -45,7 +45,7 @@ function renderNewProduct() {
     secondImg.src = Product.all[secondIndex].image;
     secondImg.alt = Product.all[secondIndex].name;
     secondProductIndex = secondIndex;
-    
+
     let thirdIndex;
     do {
         thirdIndex = randomNumber(0, Product.all.length - 1);
@@ -59,7 +59,7 @@ function renderNewProduct() {
     Product.all[secondIndex].shown++;
     Product.all[thirdIndex].shown++;
     //
-    
+
 }
 //listener
 //contentSection.addEventListener('click', handelClick);
@@ -80,13 +80,14 @@ function handelClick(event) {
             renderNewProduct();
         }
         removeEventListener('click', handelClick);
+        localStorage.setItem('Products', JSON.stringify(Product.all));
         result.addEventListener('click', handelButtonClick);
         //else {
-           // result.style.display = 'block';
+        // result.style.display = 'block';
         //}
     } //else {
-        
-        
+
+
     //}
 
 }
@@ -102,69 +103,80 @@ function handelButtonClick() {
     }
     drawChart();
     result.removeEventListener('click', handelButtonClick);
-    result.onclick = function(){
+    result.innerText = 'reload';
+    result.onclick = function () {
         location.reload();
     };
 
 }
-firstImg.addEventListener( 'click',handelClick );
-secondImg.addEventListener( 'click',handelClick );
-thirdImg.addEventListener( 'click',handelClick );
+firstImg.addEventListener('click', handelClick);
+secondImg.addEventListener('click', handelClick);
+thirdImg.addEventListener('click', handelClick);
 
 //console.log(Product.all);
 //
 function randomNumber(min, max) {
-    let theIndex = Math.floor(Math.random()* ( max - min +1)) + min;
-    for( let i =0; i<noRepeatArray.length;i++){
-       if(theIndex === noRepeatArray[i]){
-        theIndex = Math.floor(Math.random()* ( max - min +1)) + min; 
-       } 
+    let theIndex = Math.floor(Math.random() * (max - min + 1)) + min;
+    for (let i = 0; i < noRepeatArray.length; i++) {
+        if (theIndex === noRepeatArray[i]) {
+            theIndex = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
     }
-    return ( theIndex);
+    return (theIndex);
 }
 renderNewProduct();
 //chart function:
-function drawChart(){
-let ProductArray= [];
-let viewsArray= [];
-let votesArray=[];
-for (let i = 0; i < Product.all.length; i++) {
-    ProductArray.push(Product.all[i].name);
-    viewsArray.push(Product.all[i].shown);
-    votesArray.push(Product.all[i].clicks);
-    
-}
+function drawChart() {
+    let ProductArray = [];
+    let viewsArray = [];
+    let votesArray = [];
+    for (let i = 0; i < Product.all.length; i++) {
+        ProductArray.push(Product.all[i].name);
+        viewsArray.push(Product.all[i].shown);
+        votesArray.push(Product.all[i].clicks);
 
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-     labels: ProductArray,
-        datasets: [
-            {
-                label: 'Votes',
-                data: votesArray,
-                backgroundColor: 'yellow',
-                borderColor:'black',
-                borderWidth: 1
-            },
-            {
-                label: 'Times shown',
-                data: viewsArray,
-                backgroundColor: 'pink',
-                borderColor:'black',
-                borderWidth: 1
-            }
-        ]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
     }
-});
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ProductArray,
+            datasets: [
+                {
+                    label: 'Votes',
+                    data: votesArray,
+                    backgroundColor: 'yellow',
+                    borderColor: 'black',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Times shown',
+                    data: viewsArray,
+                    backgroundColor: 'pink',
+                    borderColor: 'black',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
 }
+function accumelatedVotes() {
+    const data = localStorage.getItem('Products');
+
+    if (data) {
+        const objData = JSON.parse(data);
+        Product.all = objData;
+        renderNewProduct();
+    }
+}
+accumelatedVotes();
