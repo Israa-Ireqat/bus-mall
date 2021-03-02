@@ -43,6 +43,7 @@ function renderNewProduct() {
     secondImg.src = Product.all[secondIndex].image;
     secondImg.alt = Product.all[secondIndex].name;
     secondProductIndex = secondIndex;
+    
     let thirdIndex;
     do {
         thirdIndex = randomNumber(0, Product.all.length - 1);
@@ -55,7 +56,7 @@ function renderNewProduct() {
     Product.all[secondIndex].shown++;
     Product.all[thirdIndex].shown++;
     //
-
+    
 }
 //listener
 contentSection.addEventListener('click', handelClick);
@@ -76,10 +77,10 @@ function handelClick(event) {
             renderNewProduct();
         }
         else {
-            contentSection.removeEventListener('click', handelClick);
             result.style.display = 'block';
         }
     } else {
+        contentSection.removeEventListener('click', handelClick);
         drawChart();
     }
 
