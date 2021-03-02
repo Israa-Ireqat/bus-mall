@@ -22,31 +22,35 @@ function Product(name) {
     this.shown = 0;
     Product.all.push(this);
 }
-//No repeating Images:
-
-
 
 //
 for (let i = 0; i < products.length; i++) {
     new Product(products[i]);
 }
+//No repeating Images:
+let noRepeatArray =[];
+
 //rendering function:
 function renderNewProduct() {
     let firstIndex = randomNumber(0, Product.all.length - 1);
     firstImg.src = Product.all[firstIndex].image;
     firstImg.alt = Product.all[firstIndex].name;
     firstProductIndex = firstIndex;
+    noRepeatArray.push(firstIndex);
     let secondIndex;
     do {
         secondIndex = randomNumber(0, Product.all.length - 1);
     } while (firstIndex === secondIndex);
+    noRepeatArray.push(secondIndex);
     secondImg.src = Product.all[secondIndex].image;
     secondImg.alt = Product.all[secondIndex].name;
     secondProductIndex = secondIndex;
+    
     let thirdIndex;
     do {
         thirdIndex = randomNumber(0, Product.all.length - 1);
     } while (firstIndex === thirdIndex || secondIndex === thirdIndex);
+    noRepeatArray.push(thirdIndex);
     thirdImg.src = Product.all[thirdIndex].image;
     thirdImg.alt = Product.all[thirdIndex].name;
     thirdProductIndex = thirdIndex;
@@ -55,10 +59,10 @@ function renderNewProduct() {
     Product.all[secondIndex].shown++;
     Product.all[thirdIndex].shown++;
     //
-
+    
 }
 //listener
-contentSection.addEventListener('click', handelClick);
+//contentSection.addEventListener('click', handelClick);
 function handelClick(event) {
     if (Product.counter <= clicksNumber) {
         const clickedProduct = event.target;
@@ -75,16 +79,18 @@ function handelClick(event) {
             Product.counter++;
             renderNewProduct();
         }
-        else {
-            contentSection.removeEventListener('click', handelClick);
-            result.style.display = 'block';
-        }
-    } else {
-        drawChart();
-    }
+        removeEventListener('click', handelClick);
+        result.addEventListener('click', handelButtonClick);
+        //else {
+           // result.style.display = 'block';
+        //}
+    } //else {
+        
+        
+    //}
 
 }
-result.addEventListener('click', handelButtonClick);
+
 function handelButtonClick() {
     const resultSection = document.getElementById('resultSection');
     const ulElement = document.createElement('ul');
@@ -94,13 +100,27 @@ function handelButtonClick() {
         ulElement.appendChild(liElement);
         liElement.textContent = `${Product.all[i].name} had ${Product.all[i].clicks} votes, and was seen ${Product.all[i].shown} times.`;
     }
+    drawChart();
     result.removeEventListener('click', handelButtonClick);
-}
+    result.onclick = function(){
+        location.reload();
+    };
 
-console.log(Product.all);
+}
+firstImg.addEventListener( 'click',handelClick );
+secondImg.addEventListener( 'click',handelClick );
+thirdImg.addEventListener( 'click',handelClick );
+
+//console.log(Product.all);
 //
 function randomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    let theIndex = Math.floor(Math.random()* ( max - min +1)) + min;
+    for( let i =0; i<noRepeatArray.length;i++){
+       if(theIndex === noRepeatArray[i]){
+        theIndex = Math.floor(Math.random()* ( max - min +1)) + min; 
+       } 
+    }
+    return ( theIndex);
 }
 renderNewProduct();
 //chart function:
